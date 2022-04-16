@@ -1,0 +1,49 @@
+import chess
+
+board=chess.Board()
+
+points={'K' : 0, 'Q' : 10, 'R' : 5, 'N' : 3, 'B' : 3, 'P':1, 'k' : 0,'q':-10, 'r':-5,'n':-3,'b':-3,'p':-1, ' ':0}
+checkmate=1000
+        
+def bestmove():
+    global score
+    score = 0
+    x=0
+    for square in chess.SQUARES:
+           piece=board.piece_at(chess.SQUARES[x])
+           if piece is None:
+               x+=1
+           else:
+               score+=points[str(piece.symbol())]
+               x+=1
+    print(score)
+    return score  
+    
+def makemove():
+    turnmulti=1 if board.turn==True else -1
+    maxscore=-checkmate
+    bestmove = "sui"
+    for playermove in legal_moves:
+        if board.is_checkmate:
+            score = checkmate
+        elif board.is_stalemate:
+            score = 0
+        else:
+            board.push_san(playermove)
+        if score>maxscore:
+            score = turnmulti*score
+            bestmove = playermove
+
+    return bestmove
+                                
+while board.is_checkmate()==False and board.is_stalemate()==False:
+    print(board)
+    legal_moves = list(board.legal_moves)
+    pm=str(input())
+    if pm in legal_moves== False:
+        print('illegal move')
+    else:
+        board.push_san(pm)
+        legal_moves = list(board.legal_moves)
+        board.push_san(str(makemove()))
+        bestmove()         
